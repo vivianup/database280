@@ -16,7 +16,6 @@ import static java.sql.DriverManager.getConnection;
 public class Main {
     private static final String question_1 = "Number of users in each class or project?";
     private static final String sql_1 = "Select project.pname, project.ptype, count(*) as numberOfUsers from project left join member_of on project.pid = member_of.pid group by project.pid";
-    // Number of users in each class or project
 
     private static final String question_2 = "computing time for each job";
     private static final String sql_2 = "select jobid, (end_time - start_time) as comput_time from job order by jobid asc";
@@ -37,8 +36,7 @@ public class Main {
     private static final String sql_7 = "select ptype, sum(coresUsed) as coresUsed, sum(gpuUsed) as gpuUsed, sum(ramUsed) as ramUsed from resourceUsed group by ptype";
 
     private static final String question_8 = "The high and low utilization resources in terms of number of users";
-    private static final String sql_8 = "Select resourceUsed.pid, pname, numOfUsers, cast(coresUsed as float)/numOfUsers as avg_cores, cast(gpuUsed as float)/numOfUsers as avg_gpu, cast(ramUsed as float)/numOfUsers as avg_ram " +
-            "from userInProj, resourceUsed where userInProj.pid = resourceUsed.pid";
+    private static final String sql_8 = "Select resourceUsed.pid, pname, numOfUsers, cast(coresUsed as float)/numOfUsers as avg_cores, cast(gpuUsed as float)/numOfUsers as avg_gpu, cast(ramUsed as float)/numOfUsers as avg_ram from userInProj, resourceUsed where userInProj.pid = resourceUsed.pid";
 
     private static final String question_9 = "Computing time used for each project";
     private static final String sql_9 = "select * from timeUsed";
@@ -101,9 +99,10 @@ public class Main {
             return;
         }
         for(Integer index : list) {
-            System.out.println("Question " + index + " : " + questionMap.get(index));
+            System.out.println("---------------------------------------------------------------------------");
+            System.out.println("Question " + index + " : " + questionMap.get(index) + "\n");
             executeQuery(conn, queryMap.get(index));
-            System.out.println("-------------------------------");
+
         }
     }
 
@@ -124,17 +123,19 @@ public class Main {
         ResultSetMetaData rsmd = rs.getMetaData();
         int numColumns = rsmd.getColumnCount();
         for (int i = 1; i <= numColumns; i++) {
-            System.out.print(rsmd.getColumnName(i) + "    ");
+            System.out.print(String.format("%15s", rsmd.getColumnName(i)));
         }
         System.out.println();
 
         // print the rows in the resulting table.
         while (rs.next()) {
             for (int i = 1; i <= numColumns; i++) {
-                System.out.print(rs.getString(i) + "    ");
+                System.out.print(String.format("%15s", rs.getString(i)));
             }
             System.out.println();
         }
+
+        System.out.println("\n\n");
         rs.close();
         st.close();
     }
